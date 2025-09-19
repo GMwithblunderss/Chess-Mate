@@ -4,7 +4,7 @@ export class UciEngine {
   constructor(enginePath) {
     this.enginePath = enginePath;
     this.workers = [];
-    this.workerQueue = [];
+    this.queue = [];
   }
 
   static async create(enginePath, workersNb = 1) {
@@ -14,6 +14,7 @@ export class UciEngine {
   }
 
   async init(workersNb = 1) {
+    // Keep your existing recommendation logic but let user request more (still capped).
     const nb = Math.min(workersNb, getRecommendedWorkersNb());
     for (let i = 0; i < nb; i++) {
       const worker = getEngineWorker(this.enginePath);
@@ -21,6 +22,15 @@ export class UciEngine {
       worker.isReady = true;
       this.workers.push(worker);
     }
+  }
+
+  // Call this when user starts analyzing a brand new game (prevents stale transposition data).
+  async newGame() {
+    await Promise.all(
+      this.workers.map(w =>
+        sendCommandsToWorker(w, ["ucinewgame", "isready"], "readyok").catch(() => {})
+      )
+    );
   }
 
   acquireWorker() {
@@ -33,86 +43,84 @@ export class UciEngine {
     return null;
   }
 
-  async releaseWorker(worker) {
-    const nextJob = this.workerQueue.shift();
-    if (!nextJob) {
+  releaseWorker(worker) {
+    const next = this.queue.shift();
+    if (!next) {
       worker.isReady = true;
       return;
     }
-    const res = await sendCommandsToWorker(
-      worker,
-      nextJob.commands,
-      nextJob.finalMessage,
-      nextJob.onNewMessage
-    );
-    nextJob.resolve(res);
-    this.releaseWorker(worker);
+    this._runJobOnWorker(worker, next);
   }
 
-  async analyzeFen(fen, { movetime = 2000, depth = null, retries = 3 } = {}) {
-    for (let attempt = 1; attempt <= retries; attempt++) {
-      const worker = this.acquireWorker();
-
-      let commands;
-      if (depth) {
-        commands = [`position fen ${fen}`, `go depth ${depth}`];
+  // Centralized job executor so queued vs immediate are identical.
+  async _runJobOnWorker(worker, job) {
+    const { commands, finalMessage } = job;
+    try {
+      const lines = await sendCommandsToWorker(worker, commands, finalMessage);
+      const parsed = this._parse(lines);
+      job.resolve(parsed);
+    } catch (err) {
+      if (job.attempt < job.retries) {
+        job.attempt++;
+        // Requeue at end
+        this.queue.push(job);
       } else {
-        commands = [`position fen ${fen}`, `go movetime ${movetime}`];
+        job.resolve(null); // keep it simple: return null on final failure
       }
-
-      const finalMessage = "bestmove";
-
-      if (!worker) {
-        // Queue the job if no worker is ready
-        return new Promise((resolve) => {
-          this.workerQueue.push({ commands, finalMessage, resolve });
-        });
-      }
-
-      let results;
-      try {
-        results = await sendCommandsToWorker(worker, commands, finalMessage);
-      } catch (err) {
-        console.warn(`Stockfish crashed (attempt ${attempt}) for FEN: ${fen}`, err);
-        this.releaseWorker(worker);
-        if (attempt === retries) return null;
-        continue; // retry the same FEN
-      }
-
-      let bestmove = null;
-      let pvhistory = [];
-      let evalCp = null;
-
-      for (const line of results) {
-        if (line.includes("score mate")) {
-          const match = line.match(/score mate (-?\d+)/);
-          if (match) evalCp = `mate in ${parseInt(match[1], 10)}`;
-        } else if (line.includes("score cp")) {
-          const match = line.match(/score cp (-?\d+)/);
-          if (match) evalCp = parseInt(match[1], 10);
-        }
-        if (line.includes(" pv ")) {
-          pvhistory = line.split(" pv ")[1].trim().split(" ");
-        }
-        if (line.startsWith("bestmove")) {
-          bestmove = line.split(" ")[1];
-        }
-      }
-
+    } finally {
       this.releaseWorker(worker);
-
-      if (bestmove) {
-        return { bestmove, pvhistory, evalCp };
-      } else {
-        console.warn(`No bestmove found (attempt ${attempt}) for FEN: ${fen}`);
-        if (attempt === retries) return null; // push null after max retries
-      }
     }
   }
 
+  _parse(lines) {
+    let bestmove = null;
+    let pvhistory = [];
+    let evalCp = null; // keep as you had (simple)
+    for (const line of lines) {
+      if (line.startsWith("bestmove")) bestmove = line.split(" ")[1];
+      if (line.includes("score mate")) {
+        const m = line.match(/score mate (-?\d+)/);
+        if (m) evalCp = `mate in ${parseInt(m[1], 10)}`;
+      } else if (line.includes("score cp")) {
+        const m = line.match(/score cp (-?\d+)/);
+        if (m) evalCp = parseInt(m[1], 10);
+      }
+      if (line.includes(" pv ")) {
+        pvhistory = line.split(" pv ")[1].trim().split(/\s+/);
+      }
+    }
+    return bestmove ? { bestmove, pvhistory, evalCp } : null;
+  }
+
+  analyzeFen(fen, { movetime = 2000, depth = null, retries = 2 } = {}) {
+    const commands = [
+      `position fen ${fen}`,
+      depth ? `go depth ${depth}` : `go movetime ${movetime}`
+    ];
+    const finalMessage = "bestmove";
+
+    return new Promise((resolve) => {
+      const job = {
+        commands,
+        finalMessage,
+        resolve,
+        retries,
+        attempt: 1
+      };
+      const worker = this.acquireWorker();
+      if (!worker) {
+        this.queue.push(job);
+      } else {
+        this._runJobOnWorker(worker, job);
+      }
+    });
+  }
+
   terminate() {
-    for (const w of this.workers) w.terminate();
+    for (const w of this.workers) {
+      try { w.terminate(); } catch {}
+    }
     this.workers = [];
-    this.workerQueue = [];
+    this.queue = [];
   }
 }
