@@ -1,0 +1,170 @@
+.container {
+    width: 350px;
+    background-color: #0e0e0e;
+    color: white;
+    border-radius: 12px;
+    padding: 16px;
+    font-family: sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.playerBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.nameWhite {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.nameBlack {
+    color: #90ee90;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.label {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.vs {
+    color: #888;
+    margin: 0 8px;
+    font-size: 1.2rem;
+}
+
+.metricsRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.metric {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+}
+
+.bigValue {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.meterBar {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+}
+
+.eloRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.elo {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.eloLabel {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.moveSection {
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.moveSectionRed {
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.sectionHeader {
+    color: #90ee90;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sectionHeaderRed {
+    color: #ff6961;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.header-white {
+    margin-left: 68%;
+    color: #fff;
+}
+
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.labelMove {
+    flex: 1;
+}
+
+.count {
+    width: 24px;
+    text-align: center;
+}
+
+.reviewButton {
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background-color 0.3s ease;
+}
+
+@media (max-width: 768px){
+    .container {
+    width: 100%;
+    height: 100%;
+    background-color: #0e0e0e;
+    color: white;
+    border-radius: 12px;
+    padding: 16px;
+    font-family: sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box; 
+}
+.header-white {
+    margin-left: 78%;
+    color: #fff;
+
+}
+}

@@ -1,0 +1,26 @@
+
+.homepage{
+    display: flex;
+    flex-direction: row; 
+    min-height: 100dvh; 
+    max-height: 100dvh;
+    width: 100%;
+
+}
+.card{
+
+    text-align: center;
+    margin-left: 5%;
+}
+.card-container {
+    display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem; 
+    padding: 2rem; 
+    flex: 1; 
+    justify-items: center; 
+    align-content: center; 
+}
+.sidebar-div{
+    max-height: 100vh;
+}

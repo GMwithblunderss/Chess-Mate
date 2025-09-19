@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="256" fill="#ff6b61"/>
+  
+  <!-- White Cross with subtle shadow effect -->
+  <g filter="url(#shadow)">
+    <rect x="160" y="240" width="192" height="32" rx="8" ry="8" fill="white" transform="rotate(45 256 256)" />
+    <rect x="160" y="240" width="192" height="32" rx="8" ry="8" fill="white" transform="rotate(-45 256 256)" />
+  </g>
+
+  <!-- Shadow Filter -->
+  <defs>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="4" dy="4" stdDeviation="2" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+</svg>

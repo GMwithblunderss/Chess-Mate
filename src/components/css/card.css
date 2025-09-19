@@ -1,0 +1,292 @@
+.card-root {
+    position: relative;
+    width: 320px;
+    height: 460px;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    transform-style: preserve-3d;
+    transition: transform .6s cubic-bezier(.25,.8,.25,1);
+}
+.card-root:hover {
+     transform: translateY(-8px); 
+}
+.card-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at 30% 25%, rgba(90,140,255,.25), transparent 60%),
+        radial-gradient(circle at 75% 75%, rgba(140,90,255,.18), transparent 65%);
+    filter: blur(28px);
+    opacity: .55;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+.card-sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    background:
+        linear-gradient(140deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 45%),
+        linear-gradient(20deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,0) 60%);
+    opacity: .6;
+    pointer-events: none;
+}
+.card {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 26px 26px;
+    border-radius: 24px;
+    background:
+        linear-gradient(160deg,#141414 0%,#1b1b1c 60%,#121318 100%);
+    border: 1px solid rgba(255,255,255,.07);
+    box-shadow:
+        0 10px 30px -4px rgba(0,0,0,.6),
+        0 4px 12px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.08),
+        inset 0 -1px 0 rgba(0,0,0,.5);
+    backdrop-filter: blur(14px);
+    overflow: hidden;
+    gap: 26px;
+}
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+    opacity: .5;
+}
+.card-root:hover .card {
+    border-color: rgba(90,140,255,.4);
+    box-shadow:
+        0 18px 50px -6px rgba(0,0,0,.75),
+        0 8px 22px rgba(0,0,0,.55),
+        0 0 0 1px rgba(110,150,255,.25),
+        inset 0 1px 0 rgba(255,255,255,.15);
+}
+.card-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+.card-image-wrap {
+    position: relative;
+}
+.card-image-wrap::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    background: radial-gradient(circle at 50% 50%, rgba(100,150,255,.35), transparent 70%);
+    filter: blur(22px);
+    opacity: 0;
+    transition: opacity .5s;
+    pointer-events: none;
+}
+.card-root:hover .card-image-wrap::after {
+    opacity: 1;
+}
+.card-image {
+    width: 104px;
+    height: 104px;
+    border-radius: 20px;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,.12);
+    box-shadow:
+        0 8px 26px rgba(0,0,0,.6),
+        0 4px 14px rgba(0,0,0,.5),
+        0 2px 4px rgba(0,0,0,.4);
+    transition: transform .55s cubic-bezier(.23,1,.32,1), border-color .4s;
+}
+.card-root:hover .card-image {
+    transform: scale(1.07) rotateZ(1.5deg);
+    border-color: rgba(130,170,255,.55);
+}
+.card-title {
+    font-size: 1.85rem;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    margin: 0;
+    background: linear-gradient(95deg,#ffffff 0%,#9fc9ff 40%,#dbe9ff 60%,#ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,.55));
+    transition: transform .4s, letter-spacing .45s;
+    text-align: center;
+}
+.card-root:hover .card-title {
+    transform: translateY(-4px);
+    letter-spacing: -.04em;
+}
+.card-middle {
+    display: flex;
+    width: 100%;
+}
+.card-input {
+    width: 100%;
+    padding: 16px 18px;
+    font-size: 15px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 14px;
+    color: #fff;
+    outline: none;
+    transition: border-color .35s, background .35s, box-shadow .4s, transform .4s;
+    font-weight: 400;
+    letter-spacing: .2px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,.35);
+    backdrop-filter: blur(8px);
+}
+.card-input::placeholder {
+    color: rgba(255,255,255,.45);
+    font-weight: 300;
+    letter-spacing: .5px;
+}
+.card-input:focus {
+    background: rgba(120,170,255,.07);
+    border-color: rgba(140,185,255,.55);
+    box-shadow:
+        0 0 0 3px rgba(110,160,255,.25),
+        0 4px 14px -2px rgba(110,160,255,.35),
+        inset 0 2px 4px rgba(0,0,0,.35);
+    transform: translateY(-2px);
+}
+.card-btn {
+    width: 100%;
+    padding: 17px 26px;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid rgba(115,165,255,.55);
+    border-radius: 16px;
+    cursor: pointer;
+    background:
+        linear-gradient(140deg,#4895ff 0%,#397fd6 45%,#2f6ab8 70%,#25549a 100%);
+    color: #fff;
+    letter-spacing: .5px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .55s cubic-bezier(.23,1,.32,1), box-shadow .55s, filter .55s;
+    box-shadow:
+        0 8px 26px -4px rgba(60,120,210,.5),
+        0 4px 14px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.25);
+}
+.card-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(110deg,rgba(255,255,255,.65) 0%,rgba(255,255,255,0) 70%);
+    transform: skewX(-25deg);
+    opacity: .55;
+    filter: blur(4px);
+    transition: left .85s cubic-bezier(.23,1,.32,1);
+}
+.card-root:hover .card-btn::before {
+    left: 130%;
+}
+.card-btn:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 14px 40px -6px rgba(70,130,230,.6),
+        0 6px 20px rgba(0,0,0,.6),
+        0 0 0 1px rgba(120,180,255,.35),
+        inset 0 1px 0 rgba(255,255,255,.35);
+}
+.card-btn:active {
+    transform: translateY(-1px);
+    box-shadow:
+        0 10px 24px -4px rgba(70,130,230,.55),
+        0 4px 12px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.4);
+}
+.card-btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    filter: grayscale(.4) brightness(.85);
+    transform: none;
+}
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 28px;
+    background: rgba(0,0,0,.85);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 2147483647;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-align: center;
+}
+.loading-text {
+    background: linear-gradient(90deg,#ffffff 0%,#bcdcff 40%,#ffffff 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 0 20px;
+    line-height: 1.25;
+    max-width: 640px;
+    text-shadow: 0 4px 14px rgba(0,0,0,.65);
+}
+.spinner {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    border: 4px solid rgba(120,170,255,.25);
+    border-top-color: #5a9dff;
+    animation: spin 1s linear infinite;
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.06),
+        0 0 22px rgba(90,150,255,.45),
+        inset 0 2px 4px rgba(0,0,0,.65);
+    position: relative;
+}
+.spinner::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%,rgba(140,190,255,.55),rgba(70,120,220,0) 70%);
+    filter: blur(4px);
+    opacity: .85;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+@media (max-width: 840px) {
+    .card-root { width: 300px; height: 430px; }
+    .card { padding: 26px 22px 22px; gap: 22px; }
+    .card-title { font-size: 1.65rem; }
+    .card-image { width: 96px; height: 96px; }
+    .card-input { padding: 14px 16px; font-size: 14px; }
+    .card-btn { padding: 15px 22px; font-size: 14px; }
+    .loading-text { font-size: 1.3rem; }
+    .spinner { width: 58px; height: 58px; }
+}
+@media (max-width: 520px) {
+    .card-root { width: 260px; height: 400px; }
+    .card { padding: 24px 18px 20px; gap: 20px; }
+    .card-title { font-size: 1.45rem; }
+    .card-image { width: 84px; height: 84px; }
+    .card-input { padding: 13px 15px; font-size: 13.5px; }
+    .card-btn { padding: 14px 20px; font-size: 13.5px; }
+    .loading-text { font-size: 1.1rem; }
+    .spinner { width: 52px; height: 52px; }
+}
