@@ -19,6 +19,7 @@
     "react-chessboard": "^5.2.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.7.0",
+    "http-proxy-middleware": "^3.0.5",
     "react-scripts": "5.0.1",
     "recharts": "^3.2.0",
     "stockfish": "^16.0.0",
@@ -50,6 +51,6 @@
     ]
   },
   "devDependencies": {
-    "http-proxy-middleware": "^3.0.5"
+    
   }
 }
